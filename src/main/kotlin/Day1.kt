@@ -14,6 +14,13 @@ class Day1 {
         val ans = readFile().zipWithNext().filter { it.second > it.first }.size
         println("Day 1 Part 1: $ans")
 
+    }
 
+    fun partTwo() {
+        val intList = readFile()
+
+        val ans = intList.windowed(3).map { it.sum() }.zipWithNext().filter { it.second > it.first }.size
+
+        println("Day 1 Part 2: $ans")
     }
 }
