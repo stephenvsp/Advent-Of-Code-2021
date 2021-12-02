@@ -2,10 +2,10 @@ import java.io.File
 
 class Day2 {
 
-    private enum class Direction(val direction: String) {
-        FORWARD("forward"),
-        UP("up"),
-        DOWN("down"),
+    private enum class Direction {
+        FORWARD,
+        UP,
+        DOWN,
     }
 
     private data class Instruction(val direction: Direction, val distance: Int)
