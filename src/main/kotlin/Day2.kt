@@ -48,4 +48,29 @@ class Day2 {
 
         return ans
     }
+
+    fun partTwo(): Int {
+        val instructions = readFile()
+
+        var depth = 0
+        var horizontal = 0
+        var aim = 0
+
+        instructions.forEach {
+            when(it.direction) {
+                Direction.FORWARD -> {
+                    horizontal += it.distance
+                    depth += aim * it.distance
+                }
+                Direction.UP -> aim -= it.distance
+                Direction.DOWN -> aim += it.distance
+            }
+        }
+
+        val ans = depth * horizontal
+
+        println("Day 2 Part 2: $ans")
+
+        return ans
+    }
 }
