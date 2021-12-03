@@ -34,67 +34,32 @@ class Day3 {
     fun partTwo(): Int {
         val report = readFile()
 
-        var oxygen = report.toMutableList()
-        var co2 = report.toMutableList()
+        var filteredOxygen = report
+        var filteredCO2 = report
 
         for (i in report[0].indices) {
-            var oxygenCount = 0
-            var co2Count = 0
-
-            oxygen.forEach{
-                if (it[i] == '1') {
-                    oxygenCount++
-                }
-                else {
-                    oxygenCount--
-                }
-            }
-
-            co2.forEach{
-                if (it[i] == '1') {
-                    co2Count++
-                }
-                else {
-                    co2Count--
-                }
-            }
-
-            if (oxygen.size != 1) {
-                if (oxygenCount >= 0) {
-                    oxygen.removeIf {
-                        it[i] == '0'
-                    }
-                }
-                else {
-                    oxygen.removeIf {
-                        it[i] == '1'
-                    }
-                }
-            }
-
-            if (co2.size != 1) {
-                if (co2Count >= 0) {
-                    co2.removeIf {
-                        it[i] == '1'
-                    }
-                }
-                else {
-                    co2.removeIf {
-                        it[i] == '0'
-                    }
-                }
-            }
+            filteredOxygen = filteredOxygen.filterBy(i, "1") { it.maxByOrNull { it.value.size }?.key!! }
+            filteredCO2 = filteredCO2.filterBy(i,"0") { it.minByOrNull { it.value.size }?.key!!}
         }
 
-
-
-        val oxygenRating = oxygen.first().toInt(2)
-        val co2Rating = co2.first().toInt(2)
-
-        val ans = oxygenRating * co2Rating
+        val ans = filteredOxygen[0].toInt(2) * filteredCO2[0].toInt(2)
 
         println("Day 3 Part 2: $ans")
 
         return ans
+    }
+
+    private fun List<String>.filterBy(pos: Int, defaultWhenEqual: String, sort: (Map<Char, List<Char>>) -> Char): List<String> {
+        if (this.size == 1) return this
+        val groupedInput = this.map { it[pos] }.groupBy{ it }
+        val isEqual = groupedInput.values.toMutableList()[0].size == groupedInput.values.toMutableList()[1].size
+        return this.filter {
+            if (isEqual) {
+                it[pos].toString() == defaultWhenEqual
+            }
+            else {
+                it[pos] == sort(groupedInput)
+            }
+        }
     }
 }
