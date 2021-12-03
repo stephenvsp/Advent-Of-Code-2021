@@ -16,33 +16,15 @@ class Day3 {
     fun partOne(): Int {
         val report = readFile()
 
-        val mostCommonBit = MutableList(report[0].length) { 0 }
+        var gamma = ""
 
-        report.forEach {
-            it.forEachIndexed { index, c ->
-                if (c == '0') {
-                    mostCommonBit[index]--
-                }
-                else {
-                    mostCommonBit[index]++
-                }
-            }
+        for (i in report[0].indices) {
+            gamma += report.map { it[i] }.groupBy { it }.maxByOrNull { it.value.size }?.key
         }
 
-        val gammaRateBinary = mostCommonBit.map {
-            if (it > 0) 1
-            else 0
-        }.joinToString("")
+        val epsilon = gamma.map { if (it == '0') '1' else 0 }.joinToString("")
 
-        val epsilonRateBinary = mostCommonBit.map {
-            if (it < 1) 1
-            else 0
-        }.joinToString("")
-
-        val gammaRateDecimal = gammaRateBinary.toInt(2)
-        val epsilonRateDecimal = epsilonRateBinary.toInt(2)
-
-        val ans = gammaRateDecimal * epsilonRateDecimal
+        val ans = gamma.toInt(2) * epsilon.toInt(2)
 
         println("Day 3 Part 1: $ans")
 
@@ -53,64 +35,58 @@ class Day3 {
         val report = readFile()
 
         var oxygen = report.toMutableList()
-
-        var index = 0
-
-        while (oxygen.size != 1) {
-            var count = 0
-
-            oxygen.forEach{
-                if (it[index] == '1') {
-                    count++
-                }
-                else {
-                    count--
-                }
-            }
-
-            if (count >= 0) {
-                oxygen.removeIf {
-                    it[index] == '0'
-                }
-            }
-            else {
-                oxygen.removeIf {
-                    it[index] == '1'
-                }
-            }
-
-            index++
-        }
-
         var co2 = report.toMutableList()
 
-        index = 0
+        for (i in report[0].indices) {
+            var oxygenCount = 0
+            var co2Count = 0
 
-        while (co2.size != 1) {
-            var count = 0
-
-            co2.forEach{
-                if (it[index] == '1') {
-                    count++
+            oxygen.forEach{
+                if (it[i] == '1') {
+                    oxygenCount++
                 }
                 else {
-                    count--
+                    oxygenCount--
                 }
             }
 
-            if (count >= 0) {
-                co2.removeIf {
-                    it[index] == '1'
+            co2.forEach{
+                if (it[i] == '1') {
+                    co2Count++
                 }
-            }
-            else {
-                co2.removeIf {
-                    it[index] == '0'
+                else {
+                    co2Count--
                 }
             }
 
-            index++
+            if (oxygen.size != 1) {
+                if (oxygenCount >= 0) {
+                    oxygen.removeIf {
+                        it[i] == '0'
+                    }
+                }
+                else {
+                    oxygen.removeIf {
+                        it[i] == '1'
+                    }
+                }
+            }
+
+            if (co2.size != 1) {
+                if (co2Count >= 0) {
+                    co2.removeIf {
+                        it[i] == '1'
+                    }
+                }
+                else {
+                    co2.removeIf {
+                        it[i] == '0'
+                    }
+                }
+            }
         }
+
+
 
         val oxygenRating = oxygen.first().toInt(2)
         val co2Rating = co2.first().toInt(2)
