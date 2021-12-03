@@ -5,7 +5,7 @@ class Day2 {
     private enum class Direction {
         FORWARD,
         UP,
-        DOWN,
+        DOWN
     }
 
     private data class Instruction(val direction: Direction, val distance: Int)
