@@ -48,4 +48,77 @@ class Day3 {
 
         return ans
     }
+
+    fun partTwo(): Int {
+        val report = readFile()
+
+        var oxygen = report.toMutableList()
+
+        var index = 0
+
+        while (oxygen.size != 1) {
+            var count = 0
+
+            oxygen.forEach{
+                if (it[index] == '1') {
+                    count++
+                }
+                else {
+                    count--
+                }
+            }
+
+            if (count >= 0) {
+                oxygen.removeIf {
+                    it[index] == '0'
+                }
+            }
+            else {
+                oxygen.removeIf {
+                    it[index] == '1'
+                }
+            }
+
+            index++
+        }
+
+        var co2 = report.toMutableList()
+
+        index = 0
+
+        while (co2.size != 1) {
+            var count = 0
+
+            co2.forEach{
+                if (it[index] == '1') {
+                    count++
+                }
+                else {
+                    count--
+                }
+            }
+
+            if (count >= 0) {
+                co2.removeIf {
+                    it[index] == '1'
+                }
+            }
+            else {
+                co2.removeIf {
+                    it[index] == '0'
+                }
+            }
+
+            index++
+        }
+
+        val oxygenRating = oxygen.first().toInt(2)
+        val co2Rating = co2.first().toInt(2)
+
+        val ans = oxygenRating * co2Rating
+
+        println("Day 3 Part 2: $ans")
+
+        return ans
+    }
 }
