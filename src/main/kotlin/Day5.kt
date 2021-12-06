@@ -1,6 +1,7 @@
 import java.io.File
 import java.lang.Integer.max
 import java.lang.Integer.min
+import java.lang.Math.abs
 
 class Day5 {
 
@@ -42,6 +43,59 @@ class Day5 {
                 for (i in smaller..bigger) {
                     grid[line.y1][i]++
                 }
+            }
+        }
+
+        var ans = 0
+
+        grid.forEach { row ->
+            row.forEach { cell ->
+                if (cell > 1) {
+                    ans++
+                }
+            }
+        }
+
+        println("Day 5 Part 1: $ans")
+        return ans
+    }
+
+    fun partTwo(): Int {
+        val lines = readFile()
+
+        var grid = MutableList(1000) { MutableList(1000) { 0 } }
+
+        lines.forEach { line ->
+            if (line.x1 == line.x2) {
+                val bigger = max(line.y1, line.y2)
+                val smaller = min(line.y1, line.y2)
+
+                for (i in smaller..bigger) {
+                    grid[i][line.x1]++
+                }
+            }
+            else if (line.y1 == line.y2) {
+                val bigger = max(line.x1, line.x2)
+                val smaller = min(line.x1, line.x2)
+
+                for (i in smaller..bigger) {
+                    grid[line.y1][i]++
+                }
+            }
+            else {
+
+                val distance = (line.y1 - line.y2) + abs(line.x1 - line.x2)
+                val smallerY = min(line.y2, line.y1)
+
+                val matchingX = if (smallerY == line.y1) line.x1 else line.x2
+                val notMatchingX = if (smallerY != line.y1) line.x1 else line.x2
+
+                val direction = if (matchingX < notMatchingX) 1 else -1
+
+                for (i in 0..distance) {
+                    grid[smallerY + i][matchingX + (i * direction)]++
+                }
+
             }
         }
 

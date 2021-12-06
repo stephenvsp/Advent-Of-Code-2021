@@ -7,6 +7,11 @@ internal class Day5Test {
 
     @Test
     fun `day 5 part 1`() {
-        day5.partOne()
+        assertEquals(6397, day5.partOne())
+    }
+
+    @Test
+    fun `day 5 part 2`() {
+        assertEquals(22335, day5.partTwo())
     }
 }
