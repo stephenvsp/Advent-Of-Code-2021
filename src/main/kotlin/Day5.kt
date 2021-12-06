@@ -84,7 +84,7 @@ class Day5 {
             }
             else {
 
-                val distance = (line.y1 - line.y2) + abs(line.x1 - line.x2)
+                val distance = abs(line.y1 - line.y2)
                 val smallerY = min(line.y2, line.y1)
 
                 val matchingX = if (smallerY == line.y1) line.x1 else line.x2
