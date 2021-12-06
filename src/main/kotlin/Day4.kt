@@ -4,7 +4,7 @@ class Day4 {
 
     private data class Number(val number: String, var called: Boolean)
 
-    private data class Board(val rows : List<List<Number>>) {
+    private data class Board(val rows : List<List<Number>>, var won: Boolean = false) {
 
         val rowScore = mutableListOf(0, 0, 0, 0, 0)
         val columnScore = mutableListOf(0, 0, 0, 0, 0)
@@ -89,5 +89,33 @@ class Day4 {
         }
 
         return 0
+    }
+
+    fun partTwo(): Int {
+
+        val file = readFile()
+        val numbers = file.first
+        val boards = file.second
+
+        var lastBoard = Board(listOf())
+        var numberCalledWhenWon = -1
+
+        numbers.forEach { calledNumber ->
+            boards.forEach { board ->
+                if (!board.won) {
+                    if (board.markNumber(calledNumber)) {
+                        if (board.isBingo()) {
+                            board.won = true
+                            lastBoard = board
+                            numberCalledWhenWon = calledNumber.toInt()
+                        }
+                    }
+                }
+            }
+        }
+
+        val ans = lastBoard.sumUnmarked() * numberCalledWhenWon
+        println("Day 4 Part 2: $ans")
+        return ans
     }
 }
