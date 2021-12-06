@@ -36,12 +36,35 @@ class Day6 {
         return ans
     }
 
-//    fun reproduceFish(daysLeft: Int, fish: List<Int>): Int {
-//        return if (daysLeft == 0) {
-//            fish.size
-//        }
-//        else {
-//             reproduceFish(daysLeft - 1, List(fish.filter { it == 0 }.size) { 8 } + fish.map { Math.floorMod(it - 1, 7) })
-//        }
-//    }
+    fun partTwo(): Long {
+        val schoolOfFish = readFile()
+
+        val ans = simulatePufferPuffs(schoolOfFish, 256)
+
+        println("Day 6 Part 2: $ans")
+
+        return ans
+    }
+
+    fun simulatePufferPuffs(state : List<Int>, steps : Int) : Long {
+        var initialState = state.groupBy { it }.mapValues { valueList -> valueList.value.size.toLong() }
+        // map from puffer fish in state X to count of fish in that state
+        var nextState = initialState.toMap()
+        for (i in 0 until steps) {
+            var countZeroFish = nextState.getOrDefault(0, 0)
+
+            var newNextState = nextState
+                .filterKeys { key -> key > 0 }
+                .mapKeys { kv -> kv.key - 1 }
+                .toMutableMap()
+
+            if (countZeroFish > 0) {
+                newNextState[8] = newNextState.getOrDefault(8, 0) + countZeroFish
+                newNextState[6] = newNextState.getOrDefault(6, 0) + countZeroFish
+            }
+
+            nextState = newNextState
+        }
+        return nextState.values.sum()
+    }
 }
