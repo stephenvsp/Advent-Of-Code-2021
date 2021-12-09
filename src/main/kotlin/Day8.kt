@@ -1,7 +1,7 @@
 import java.io.File
 import java.util.*
 
-class Day8 {
+class Day8 : Day {
 
 
     private data class Signal(val input: List<String>, val output: List<String>)
@@ -24,7 +24,7 @@ class Day8 {
         return signals
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
         val signals = readFile()
 
         var count = 0
@@ -42,7 +42,7 @@ class Day8 {
         return count
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val signals = readFile()
 
         var count = 0
@@ -75,7 +75,7 @@ class Day8 {
         return count
     }
 
-    fun MutableSet<Set<Char>>.singleAndRemove(
+    private fun MutableSet<Set<Char>>.singleAndRemove(
         segments: Int,
         containsAllSegments: Set<Char>? = null
     ): Set<Char> = single {

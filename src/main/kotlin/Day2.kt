@@ -1,6 +1,6 @@
 import java.io.File
 
-class Day2 {
+class Day2 : Day {
 
     private enum class Direction {
         FORWARD,
@@ -28,7 +28,7 @@ class Day2 {
         return instructionList
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
         val instructions = readFile()
 
         var depth = 0
@@ -49,7 +49,7 @@ class Day2 {
         return ans
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val instructions = readFile()
 
         var depth = 0

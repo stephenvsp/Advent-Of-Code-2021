@@ -1,6 +1,6 @@
 import java.io.File
 
-class Day4 {
+class Day4 : Day {
 
     private data class Number(val number: String, var called: Boolean)
 
@@ -71,7 +71,7 @@ class Day4 {
         return Pair(numbers, boards)
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
         val file = readFile()
         val numbers = file.first
         val boards = file.second
@@ -91,7 +91,7 @@ class Day4 {
         return 0
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
 
         val file = readFile()
         val numbers = file.first

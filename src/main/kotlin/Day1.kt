@@ -1,6 +1,6 @@
 import java.io.File
 
-class Day1 {
+class Day1 : Day {
 
     private fun readFile(): List<Int> {
         val intList = mutableListOf<Int>()
@@ -9,7 +9,7 @@ class Day1 {
         return intList
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
 
         val ans = readFile().zipWithNext().filter { it.second > it.first }.size
         println("Day 1 Part 1: $ans")
@@ -18,7 +18,7 @@ class Day1 {
 
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val intList = readFile()
 
         val ans = intList.windowed(3).map { it.sum() }.zipWithNext().filter { it.second > it.first }.size

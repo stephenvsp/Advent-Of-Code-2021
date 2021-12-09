@@ -3,7 +3,7 @@ import java.lang.Integer.max
 import java.lang.Integer.min
 import java.lang.Math.abs
 
-class Day5 {
+class Day5 : Day {
 
     private class Line(val x1: Int, val y1: Int, val x2: Int, val y2: Int)
 
@@ -22,7 +22,7 @@ class Day5 {
 
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
         val lines = readFile()
 
         var grid = MutableList(1000) { MutableList(1000) { 0 } }
@@ -60,7 +60,7 @@ class Day5 {
         return ans
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val lines = readFile()
 
         var grid = MutableList(1000) { MutableList(1000) { 0 } }

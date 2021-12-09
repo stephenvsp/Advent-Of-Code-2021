@@ -36,17 +36,17 @@ class Day6 {
         return ans
     }
 
-    fun partTwo(): Long {
+    fun partTwo(): Int {
         val schoolOfFish = readFile()
 
         val ans = simulatePufferPuffs(schoolOfFish, 256)
 
         println("Day 6 Part 2: $ans")
 
-        return ans
+        return ans.toInt()
     }
 
-    fun simulatePufferPuffs(state : List<Int>, steps : Int) : Long {
+    private fun simulatePufferPuffs(state : List<Int>, steps : Int) : Long {
         var initialState = state.groupBy { it }.mapValues { valueList -> valueList.value.size.toLong() }
         // map from puffer fish in state X to count of fish in that state
         var nextState = initialState.toMap()

@@ -1,7 +1,7 @@
 import java.io.File
 import java.lang.Exception
 
-class Day9 {
+class Day9 : Day {
 
     private fun readFile(): List<String> {
 
@@ -9,7 +9,8 @@ class Day9 {
 
 
     }
-    fun partOne(): Int {
+
+    override fun partOne(): Int {
 
         val lavaTubes = readFile()
 
@@ -35,7 +36,7 @@ class Day9 {
         return riskLevel
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val lavaTubes = readFile()
 
         val map = mutableSetOf<Pair<Int, Int>>()

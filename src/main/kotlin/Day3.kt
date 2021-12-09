@@ -1,6 +1,6 @@
 import java.io.File
 
-class Day3 {
+class Day3 : Day {
 
     private fun readFile(): List<String> {
         val binaryList = mutableListOf<String>()
@@ -13,7 +13,7 @@ class Day3 {
         return binaryList
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
         val report = readFile()
 
         var gamma = ""
@@ -31,7 +31,7 @@ class Day3 {
         return ans
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
         val report = readFile()
 
         var filteredOxygen = report

@@ -1,7 +1,7 @@
 import java.io.File
 import java.lang.Math.abs
 
-class Day7 {
+class Day7 : Day{
 
     private fun readFile(): List<Int> {
 
@@ -11,7 +11,7 @@ class Day7 {
 
     }
 
-    fun partOne(): Int {
+    override fun partOne(): Int {
 
         val crabs = readFile()
 
@@ -30,7 +30,7 @@ class Day7 {
         return centerOfGravity
     }
 
-    fun partTwo(): Int {
+    override fun partTwo(): Int {
 
         val crabs = readFile()
 
