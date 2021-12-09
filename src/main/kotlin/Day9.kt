@@ -1,7 +1,12 @@
 import java.io.File
 import java.lang.Exception
+import java.lang.IndexOutOfBoundsException
 
 class Day9 : Day {
+
+    private val map = mutableSetOf<Pair<Int, Int>>()
+    private val offsets = listOf((0 to -1), (0 to 1), (-1 to 0), (1 to 0))
+    private val lavaTubes = readFile()
 
     private fun readFile(): List<String> {
 
@@ -17,16 +22,12 @@ class Day9 : Day {
         var riskLevel = 0
 
         lavaTubes.forEachIndexed { y, row ->
-            row.forEachIndexed { x, column ->
-                var count = 0
-                if (checkNeighbor(x, y, x - 1, y, lavaTubes)) count++
-                if (checkNeighbor(x, y, x + 1, y, lavaTubes)) count++
-                if (checkNeighbor(x, y, x, y - 1, lavaTubes)) count++
-                if (checkNeighbor(x, y, x, y + 1, lavaTubes)) count++
+            row.forEachIndexed { x, _ ->
 
-                if (count == 4) {
+                if (checkNeighbor(x, y)) {
                     riskLevel += (lavaTubes[y][x] + 1).toString().toInt()
                 }
+
 
             }
         }
@@ -37,61 +38,57 @@ class Day9 : Day {
     }
 
     override fun partTwo(): Int {
-        val lavaTubes = readFile()
-
-        val map = mutableSetOf<Pair<Int, Int>>()
 
         val basins = mutableListOf<Int>()
 
         lavaTubes.forEachIndexed { y, row ->
-            row.forEachIndexed { x, column ->
+            row.forEachIndexed { x, _ ->
 
-                val currentSquare = Pair(x, y)
+                val basinSize = scoreNeighbors(x, y)
 
-                if (!map.contains(currentSquare) && lavaTubes[y][x] != '9') {
-                    val basinSize = scoreNeighbors(x, y, lavaTubes, map)
-
-                    basins.add(basinSize)
-                }
+                basins.add(basinSize)
             }
         }
 
-        val largestThree = basins.sorted().takeLast(3)
-        val ans = largestThree[0] * largestThree[1] * largestThree[2]
+        val ans = basins.sorted().takeLast(3).reduce { acc, value ->
+            acc * value
+        }
 
         println("Day 9 Part 2: $ans")
         return ans
     }
 
-    private fun scoreNeighbors(x: Int, y: Int, lavaTubes: List<String>, set: MutableSet<Pair<Int, Int>>): Int {
-        try {
-            if (lavaTubes[y][x] == '9' || set.contains(Pair(x, y))) {
-                return 0
+    private fun scoreNeighbors(x: Int, y: Int): Int {
+        return try {
+            if (lavaTubes[y][x] == '9' || map.contains(Pair(x, y))) {
+                0
+            } else {
+                map.add(Pair(x, y))
+
+                1 + offsets.sumOf {
+                    scoreNeighbors(x + it.first, y + it.second)
+                }
             }
         }
-        catch (exception: Exception) {
-            return 0
+        catch (exception: IndexOutOfBoundsException) {
+            0
         }
 
-        set.add(Pair(x, y))
-        var score = 1
 
-        score += scoreNeighbors(x - 1, y, lavaTubes, set)
-        score += scoreNeighbors(x + 1, y, lavaTubes, set)
-        score += scoreNeighbors(x, y - 1, lavaTubes, set)
-        score += scoreNeighbors(x, y + 1, lavaTubes, set)
-
-        return score
     }
 
-    private fun checkNeighbor(x: Int, y: Int, neighborX: Int, neighborY: Int, lavaTubes: List<String>): Boolean {
-        try {
-            if (lavaTubes[neighborY][neighborX] > lavaTubes[y][x]) return true
-        }
-        catch (e: Exception) {
-            return true
-        }
-        return false
+    private fun checkNeighbor(x: Int, y: Int): Boolean {
+
+        return offsets.map {
+                try {
+                    if (lavaTubes[y + it.second][x + it.first] > lavaTubes[y][x]) 1 else 0
+                }
+                catch(exception: IndexOutOfBoundsException) {
+                    1
+                }
+            }.sum() == 4
+
+
 
     }
 }
