@@ -1,4 +1,5 @@
 import java.io.File
+import java.util.*
 
 class Day8 {
 
@@ -15,10 +16,7 @@ class Day8 {
             val parts = it.split(" ")
 
             val input = parts.subList(0, 10)
-            val output = parts.subList(11, 15).map {
-                it.toList().sorted().joinToString()
-            }
-
+            val output = parts.subList(11, 15)
 
             signals.add(Signal(input, output))
         }
@@ -51,42 +49,36 @@ class Day8 {
 
         signals.forEach { signal ->
 
-            val one = signal.input.find { it.length == 2 }!!
-            val four = signal.input.find { it.length == 4 }!!
-            val seven = signal.input.find { it.length == 3 }!!
-            val eight = signal.input.find { it.length == 7 }!!
+            val codes = signal.input.map { it.toSet() }.toMutableSet()
+            val decoded: MutableMap<Int, Set<Char>> = mutableMapOf()
 
-            val fourDiff = four.filter { !one.contains(it) }
+            decoded[1] = codes.singleAndRemove(2)
+            decoded[4] = codes.singleAndRemove(4)
+            decoded[7] = codes.singleAndRemove(3)
+            decoded[8] = codes.singleAndRemove(7)
 
-            val lengthOfFive = signal.input.filter { it.length == 5}
+            decoded[9] = codes.singleAndRemove(6, decoded.getValue(4))
+            decoded[0] = codes.singleAndRemove(6, decoded.getValue(7))
+            decoded[6] = codes.singleAndRemove(6)
 
-            val three = lengthOfFive.find { it.contains(one[0]) && it.contains(one[1]) }
-            val five = lengthOfFive.find { it.contains(fourDiff[0]) && it.contains(fourDiff[1]) }
-            val two = lengthOfFive.find { it != three && it != five }
+            decoded[3] = codes.singleAndRemove(5, decoded.getValue(1))
+            decoded[5] = codes.singleAndRemove(5, decoded.getValue(4) - decoded.getValue(1))
+            decoded[2] = codes.single()
 
-            var lengthOfSix = signal.input.filter { it.length == 6 }
-
-            val nine = lengthOfSix.find { it.contains(four[0]) && it.contains(four[1]) && it.contains(four[2]) && it.contains(four[3]) }
-            lengthOfSix = lengthOfSix.filter {
-                it != nine
-            }
-            val six = lengthOfSix.find { it.contains(fourDiff[0]) && it.contains(fourDiff[1]) }
-            val zero = lengthOfSix.find { it != six }
-
-            val signalMap = mapOf(zero to 0, one to 1, two to 2, three to 3, four to 4, five to 5, six to 6, seven to 7, eight to 8, nine to 9).mapKeys {
-                it.key!!.toList().sorted().joinToString()
-            }
-
-            val output = signal.output.map {
-                signalMap[it]
-            }
-
-            count += output.joinToString("").toInt()
-
+            count += signal.output.map { digit -> decoded.filterValues { it == digit.toSet() }.keys.single() }
+                .joinToString("")
+                .toInt()
         }
 
         println("Day 8 Part 2: $count")
 
         return count
     }
+
+    fun MutableSet<Set<Char>>.singleAndRemove(
+        segments: Int,
+        containsAllSegments: Set<Char>? = null
+    ): Set<Char> = single {
+        it.size == segments && it.containsAll(containsAllSegments ?: emptySet())
+    }.also { this.remove(it) }
 }
