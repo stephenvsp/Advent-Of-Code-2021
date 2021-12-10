@@ -1,12 +1,11 @@
 import java.io.File
 import java.util.*
 
-class Day10 : Day {
+class Day10 {
 
     private fun readFile() = File("src/main/resources/input10.txt").readLines()
 
-    override fun partOne(): Int {
-
+    fun partOne(): Int {
 
         var invalidCharacterMap = mutableMapOf<Char, Int>()
         val matchingCharacters = mapOf('(' to ')', '[' to ']', '{' to '}', '<' to '>')
@@ -44,7 +43,47 @@ class Day10 : Day {
         return ans
     }
 
-    override fun partTwo(): Int {
-        TODO("Not yet implemented")
+    fun partTwo(): Long {
+
+        val matchingCharacters = mapOf('(' to ')', '[' to ']', '{' to '}', '<' to '>')
+        val autoCompleteScores = mapOf(')' to 1, ']' to 2, '}' to 3, '>' to 4)
+
+        val scores = mutableListOf<Long>()
+
+        readFile().forEach { line ->
+
+            val stack = Stack<Char>()
+            var valid = true
+
+            line.forEach {
+                if (it in matchingCharacters.keys) {
+                    stack.push(it)
+                }
+                else {
+                    if (stack.isEmpty() || matchingCharacters[stack.peek()] != it) {
+                        valid = false
+
+                    }
+                    else {
+                        stack.pop()
+                    }
+                }
+            }
+
+            if (stack.isNotEmpty() && valid) {
+                scores.add(stack.reversed().fold(0) { acc, c ->
+                    val matchingCharacter = matchingCharacters[c]!!
+                    val characterScore = autoCompleteScores[matchingCharacter]!!
+
+                    acc * 5 + characterScore
+                })
+            }
+        }
+
+        val ans = scores.sorted()[scores.size / 2]
+
+        println("Day 10 Part 2: $ans")
+
+        return ans
     }
 }
