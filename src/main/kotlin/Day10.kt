@@ -45,12 +45,12 @@ class Day10 {
 
     fun partTwo(): Long {
 
+        val lines = readFile()
+
         val matchingCharacters = mapOf('(' to ')', '[' to ']', '{' to '}', '<' to '>')
         val autoCompleteScores = mapOf(')' to 1, ']' to 2, '}' to 3, '>' to 4)
 
-        val scores = mutableListOf<Long>()
-
-        readFile().forEach { line ->
+        val scores = lines.map { line ->
 
             val stack = Stack<Char>()
             var valid = true
@@ -62,7 +62,6 @@ class Day10 {
                 else {
                     if (stack.isEmpty() || matchingCharacters[stack.peek()] != it) {
                         valid = false
-
                     }
                     else {
                         stack.pop()
@@ -71,14 +70,14 @@ class Day10 {
             }
 
             if (stack.isNotEmpty() && valid) {
-                scores.add(stack.reversed().fold(0) { acc, c ->
-                    val matchingCharacter = matchingCharacters[c]!!
-                    val characterScore = autoCompleteScores[matchingCharacter]!!
-
-                    acc * 5 + characterScore
-                })
+                stack.reversed().fold(0) { acc: Long, c ->
+                    acc * 5 + autoCompleteScores[matchingCharacters[c]!!]!!
+                }
             }
-        }
+            else {
+                0L
+            }
+        }.filter { it != 0L }
 
         val ans = scores.sorted()[scores.size / 2]
 
