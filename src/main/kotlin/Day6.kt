@@ -36,14 +36,14 @@ class Day6 {
         return ans
     }
 
-    fun partTwo(): Int {
+    fun partTwo(): Long {
         val schoolOfFish = readFile()
 
         val ans = simulatePufferPuffs(schoolOfFish, 256)
 
         println("Day 6 Part 2: $ans")
 
-        return ans.toInt()
+        return ans
     }
 
     private fun simulatePufferPuffs(state : List<Int>, steps : Int) : Long {
