@@ -9,7 +9,7 @@ class Day11 : Day {
             }.toMutableList()
     }.toMutableList()
 
-    val offsets = listOf((0 to 1), (1 to 1), (1 to 0), (1 to -1), (0 to -1), (-1 to -1), (-1 to 0), (-1 to 1))
+    private val offsets = listOf((0 to 1), (1 to 1), (1 to 0), (1 to -1), (0 to -1), (-1 to -1), (-1 to 0), (-1 to 1))
 
     override fun partOne(): Int {
         var octopuses = readFile()
@@ -17,23 +17,13 @@ class Day11 : Day {
         val steps = 100
         var flashedCount = 0
 
-        val x_max = 10
-        val y_max = 10
-
         repeat(steps) {
             val flashed = mutableSetOf<Pair<Int, Int>>()
 
-            octopuses = octopuses.map { line ->
-                line.map {
-                    it + 1
-                }.toMutableList()
-            }.toMutableList()
-
-            for (y in 0 until y_max) {
-                for (x in 0 until x_max) {
-                    if (!flashed.contains(x to y) && octopuses[y][x] > 9) {
-                        octopuses = flash(octopuses, flashed, x, y)
-                    }
+            octopuses.forEachIndexed { y, line ->
+                line.forEachIndexed { x, value ->
+                    octopuses[y][x] += 1
+                    flash(octopuses, flashed, x, y)
                 }
             }
 
@@ -51,32 +41,8 @@ class Day11 : Day {
         return flashedCount
     }
 
-    fun flash(octopuses: MutableList<MutableList<Int>>, flashed: MutableSet<Pair<Int, Int>>, x: Int, y: Int): MutableList<MutableList<Int>> {
-        flashed.add((x to y))
-
-        offsets.forEach {
-            val newX = x + it.first
-            val newY = y + it.second
-
-            try {
-                octopuses[newY][newX] += 1
-
-                if (!flashed.contains(newX to newY) && octopuses[newY][newX] > 9) {
-                    flash(octopuses, flashed, newX, newY)
-                }
-            }
-            catch (exception: IndexOutOfBoundsException) {
-                //nothing xD
-            }
-        }
-        return octopuses
-    }
-
-
     override fun partTwo(): Int {
         var octopuses = readFile()
-
-        var flashedCount = 0
 
         val x_max = 10
         val y_max = 10
@@ -85,17 +51,10 @@ class Day11 : Day {
         do {
             val flashed = mutableSetOf<Pair<Int, Int>>()
 
-            octopuses = octopuses.map { line ->
-                line.map {
-                    it + 1
-                }.toMutableList()
-            }.toMutableList()
-
-            for (y in 0 until y_max) {
-                for (x in 0 until x_max) {
-                    if (!flashed.contains(x to y) && octopuses[y][x] > 9) {
-                        octopuses = flash(octopuses, flashed, x, y)
-                    }
+            octopuses.forEachIndexed { y, line ->
+                line.forEachIndexed { x, value ->
+                    octopuses[y][x] += 1
+                    flash(octopuses, flashed, x, y)
                 }
             }
 
@@ -105,13 +64,33 @@ class Day11 : Day {
                 }.toMutableList()
             }.toMutableList()
 
-
             steps++
 
         } while (flashed.size != 100)
 
         println("Day 11 Part 2: $steps")
 
-        return flashedCount
+        return steps
+    }
+
+    private fun flash(octopuses: MutableList<MutableList<Int>>, flashed: MutableSet<Pair<Int, Int>>, x: Int, y: Int): Int {
+        val currentOctopi = octopuses[y][x]
+        if (!flashed.contains(x to y) && currentOctopi > 9) {
+            flashed.add((x to y))
+
+            offsets.forEach {
+                val newX = x + it.first
+                val newY = y + it.second
+
+                try {
+                    octopuses[newY][newX] += 1
+                    flash(octopuses, flashed, newX, newY)
+                }
+                catch (exception: IndexOutOfBoundsException) {
+                    //nothing xD
+                }
+            }
+        }
+        return currentOctopi
     }
 }
