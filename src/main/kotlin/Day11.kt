@@ -74,6 +74,44 @@ class Day11 : Day {
 
 
     override fun partTwo(): Int {
-        TODO("Not yet implemented")
+        var octopuses = readFile()
+
+        var flashedCount = 0
+
+        val x_max = 10
+        val y_max = 10
+        var steps = 0
+
+        do {
+            val flashed = mutableSetOf<Pair<Int, Int>>()
+
+            octopuses = octopuses.map { line ->
+                line.map {
+                    it + 1
+                }.toMutableList()
+            }.toMutableList()
+
+            for (y in 0 until y_max) {
+                for (x in 0 until x_max) {
+                    if (!flashed.contains(x to y) && octopuses[y][x] > 9) {
+                        octopuses = flash(octopuses, flashed, x, y)
+                    }
+                }
+            }
+
+            octopuses = octopuses.map { line ->
+                line.map {
+                    if (it > 9) 0 else it
+                }.toMutableList()
+            }.toMutableList()
+
+
+            steps++
+
+        } while (flashed.size != 100)
+
+        println("Day 11 Part 2: $steps")
+
+        return flashedCount
     }
 }
