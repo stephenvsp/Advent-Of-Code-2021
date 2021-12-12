@@ -4,6 +4,8 @@ import java.lang.IndexOutOfBoundsException
 class Day11 : Day {
 
     private val flashed = mutableSetOf<Pair<Int, Int>>()
+    private val octopuses = readFile()
+
 
     fun readFile(): MutableList<MutableList<Int>> = File("src/main/resources/input11.txt").readLines().map { line ->
             line.map { char ->
@@ -13,7 +15,6 @@ class Day11 : Day {
 
 
     override fun partOne(): Int {
-        var octopuses = readFile()
 
         val steps = 100
         var flashedCount = 0
@@ -25,15 +26,15 @@ class Day11 : Day {
             octopuses.forEachIndexed { y, line ->
                 line.forEachIndexed { x, value ->
                     octopuses[y][x] += 1
-                    flash(octopuses, x, y)
+                    flash(x, y)
                 }
             }
 
-            octopuses = octopuses.map { line ->
-                line.map {
-                    if (it > 9) 0 else it
-                }.toMutableList()
-            }.toMutableList()
+            octopuses.forEachIndexed { y, line ->
+                line.forEachIndexed { x, value ->
+                    if (value > 9) octopuses[y][x] = 0
+                }
+            }
 
             flashedCount += flashed.size
         }
@@ -44,27 +45,24 @@ class Day11 : Day {
     }
 
     override fun partTwo(): Int {
-        var octopuses = readFile()
-
         var steps = 0
 
         do {
 
             flashed.clear()
 
-
             octopuses.forEachIndexed { y, line ->
                 line.forEachIndexed { x, value ->
                     octopuses[y][x] += 1
-                    flash(octopuses, x, y)
+                    flash(x, y)
                 }
             }
 
-            octopuses = octopuses.map { line ->
-                line.map {
-                    if (it > 9) 0 else it
-                }.toMutableList()
-            }.toMutableList()
+            octopuses.forEachIndexed { y, line ->
+                line.forEachIndexed { x, value ->
+                    if (value > 9) octopuses[y][x] = 0
+                }
+            }
 
             steps++
 
@@ -75,7 +73,7 @@ class Day11 : Day {
         return steps
     }
 
-    private fun flash(octopuses: MutableList<MutableList<Int>>, x: Int, y: Int): Int {
+    private fun flash(x: Int, y: Int): Int {
         val currentOctopus = octopuses[y][x]
         if (!flashed.contains(x to y) && currentOctopus > 9) {
             flashed.add((x to y))
@@ -88,7 +86,7 @@ class Day11 : Day {
 
                 try {
                     octopuses[newY][newX] += 1
-                    flash(octopuses, newX, newY)
+                    flash(newX, newY)
                 }
                 catch (exception: IndexOutOfBoundsException) {
                     //nothing xD
