@@ -31,23 +31,42 @@ class Day12 : Day {
         return cave[0].isLowerCase()
     }
 
-    private fun depthFirstTraversal(currentCave: String, path: MutableList<String>) {
+    private fun depthFirstTraversal(currentCave: String, path: MutableList<String>, smallCavesTwice: Boolean = false) {
         if (currentCave == "end") {
             if (!paths.contains(path)) {
                 paths.add(path)
             }
         }
         else {
-            caves[currentCave]!!.forEach {
-                if (!isSmallCave(it) || !path.contains(it)) {
-                    val newList = mutableListOf<String>()
-                    newList.addAll(path)
-                    newList.add(it)
-                    depthFirstTraversal(it, newList)
+            caves[currentCave]!!.forEach { nextCave ->
+                if (smallCavesTwice) {
+
+                    val smallCaveVisits = path.filter { isSmallCave(it) }.groupBy { it }.mapValues { it.value.size }
+                    val canIGoIn = if (smallCaveVisits.values.contains(2)) {
+                        !path.contains(nextCave)
+                    } else {
+                        !(nextCave == "start" || nextCave == "false")
+                    }
+
+                    if (!isSmallCave(nextCave) || canIGoIn) {
+                        val newList = mutableListOf<String>()
+                        newList.addAll(path)
+                        newList.add(nextCave)
+                        depthFirstTraversal(nextCave, newList, true)
+                    }
+                }
+                else {
+                    if (!isSmallCave(nextCave) || !path.contains(nextCave)) {
+                        val newList = mutableListOf<String>()
+                        newList.addAll(path)
+                        newList.add(nextCave)
+                        depthFirstTraversal(nextCave, newList)
+                    }
                 }
             }
         }
     }
+
 
     private val caves = readFile()
     private var paths = mutableListOf<List<String>>()
@@ -62,6 +81,11 @@ class Day12 : Day {
     }
 
     override fun partTwo(): Int {
-        TODO("Not yet implemented")
+        depthFirstTraversal("start", mutableListOf("start"), true)
+
+        val ans = paths.size
+
+        println("Day 12 Part 2: $ans")
+        return ans
     }
 }
