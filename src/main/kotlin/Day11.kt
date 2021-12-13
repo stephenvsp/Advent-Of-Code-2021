@@ -20,7 +20,6 @@ class Day11 : Day {
         var flashedCount = 0
 
         repeat(steps) {
-
             flashed.clear()
 
             octopuses.forEachIndexed { y, line ->
@@ -48,7 +47,6 @@ class Day11 : Day {
         var steps = 0
 
         do {
-
             flashed.clear()
 
             octopuses.forEachIndexed { y, line ->
