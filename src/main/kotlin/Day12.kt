@@ -21,7 +21,7 @@ class Day12 : Day {
             val counts = currentPath.filter { it.first().isLowerCase() }.groupingBy { it }.eachCount()
             cave in counts.keys && counts.any { it.value > 1 }
         }
-        println("Day 12: Part 2: $ans")
+        println("Day 12 Part 2: $ans")
         return ans
     }
 

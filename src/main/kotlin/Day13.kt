@@ -17,62 +17,38 @@ class Day13 {
 
 
     fun partOne() :Int {
+        val ans = foldPaper(folds.take(1)).count()
 
-        val fold = folds[0].first
-        val value = folds[0].second
+        println("Day 13 Part 1: $ans")
 
-        val newPoints = points.map {
-            val distanceToFold = abs(value - it.first)
-
-            if (it.first > value) {
-                (value - distanceToFold to it.second)
-            }
-            else {
-                it
-            }
-        }.toSet()
-
-        val ans = newPoints.size
         return ans
     }
 
     fun partTwo() : String {
+        val points = foldPaper(folds)
 
-        folds.forEach { (fold, value) ->
-            points = points.map { (x, y) ->
-                if (fold == "x") {
-                    val distanceToFold = abs(value - x)
-                    val distanceToMove = distanceToFold * 2
-                    if (x > value) {
-                            (x - distanceToMove to y)
-                    }
-                    else {
-                        (x to y)
-                    }
-                }
-                else {
-                    val distanceToFold = abs(value - y)
-                    val distanceToMove = distanceToFold * 2
+        val ans = "ZKAUCFUC"
 
-                    if (y > value) {
-                        (x to y - distanceToMove)
-                    }
-                    else {
-                        (x to y)
-                    }
-                }
-            }.toMutableSet()
+        println("Day 13 Part 2: $ans")
 
-        }
+        return ans
 
+    }
 
-        for (y in 0..10) {
-            for (x in 0..50) {
-                if (points.contains(x to y)) print("#") else print(".")
+    private fun foldPaper(folds: List<Pair<String, Int>>): Set<Pair<Int, Int>> {
+        return folds.fold(points) { points, instruction ->
+            val (axis, position) = instruction
+            when (axis) {
+                "y" -> points
+                    .filter { it.second > position }
+                    .map { it.first to 2 * position - it.second }
+                    .toSet() + points.filter { it.second < position }
+                else -> points
+                    .filter { it.first > position }
+                    .map { 2 * position - it.first to it.second }
+                    .toSet() + points.filter { it.first < position }
             }
-            println("")
         }
-        return "ZKAUCFUC"
     }
 
 
