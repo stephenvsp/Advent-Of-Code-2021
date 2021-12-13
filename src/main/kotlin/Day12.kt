@@ -9,16 +9,20 @@ class Day12 : Day {
         .groupBy({ it.first }, { it.second })
 
     override fun partOne(): Int {
-        return countPaths { cave, currentPath ->
+        val ans =  countPaths { cave, currentPath ->
             cave in currentPath
         }
+        println("Day 12 Part 1: $ans")
+        return ans
     }
 
     override fun partTwo(): Int {
-        return countPaths { cave, currentPath ->
+        val ans = countPaths { cave, currentPath ->
             val counts = currentPath.filter { it.first().isLowerCase() }.groupingBy { it }.eachCount()
             cave in counts.keys && counts.any { it.value > 1 }
         }
+        println("Day 12: Part 2: $ans")
+        return ans
     }
 
     private fun countPaths(
