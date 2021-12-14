@@ -1,10 +1,11 @@
 import java.io.File
 
+@ExperimentalStdlibApi
 class Day14 {
 
     private val lines = File("src/main/resources/input14.txt").readLines()
 
-    private var polymer = lines[0]
+    private var polymer = lines.first()
 
     private val rules = lines
         .takeLastWhile { it.isNotEmpty() }
@@ -26,7 +27,7 @@ class Day14 {
 
     fun partTwo(): Long {
 
-        var pairMap = polymer.windowed(2).groupingBy { it }.eachCount().mapValues { it.value.toLong() }.toMutableMap()
+        var pairMap = polymer.windowed(2).groupingBy { it }.eachCount().mapValues { it.value.toLong() }
 
         repeat(40) {
             var newPairMap = pairMap.toMutableMap()
@@ -38,10 +39,10 @@ class Day14 {
                 }
 
                 if (!newStrings.contains(oldString)) {
-                    newPairMap[oldString] = newPairMap[oldString]!! - count
+                    newPairMap[oldString] = newPairMap.getOrDefault(oldString, 0) - count
                 }
             }
-            pairMap = newPairMap.filter { it.value != 0L }.toMutableMap()
+            pairMap = newPairMap.filter { it.value != 0L }
         }
 
 
@@ -64,4 +65,31 @@ class Day14 {
 
         return ans
     }
+
+//    fun part2(): Long {
+//        val initial = polymer.windowed(2).groupingBy { it }.eachCount().mapValues { it.value.toLong() }
+//
+//        val pairsCount = (0 until 40).fold(initial) { current, _ ->
+//            buildMap {
+//                current.forEach { (pair, count) ->
+//                    val first = pair[0] + rules.getValue(pair)
+//                    val second = rules.getValue(pair) + pair[1]
+//                    put(first, getOrDefault(first, 0) + count)
+//                    put(second, getOrDefault(second, 0) + count)
+//                }
+//            }
+//        }
+//
+//        val charsCount = buildMap<Char, Long> {
+//            put(polymer[0], 1)
+//            pairsCount.forEach { (pair, count) ->
+//                put(pair[1], getOrDefault(pair[1], 0) + count)
+//            }
+//        }
+//
+//        val ans = charsCount.maxOf { it.value } - charsCount.minOf { it.value }
+//
+//        println("Day 14 Part 2: $ans")
+//        return ans
+//    }
 }

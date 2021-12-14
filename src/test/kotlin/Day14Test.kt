@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
+@ExperimentalStdlibApi
 internal class Day14Test {
 
     val day14 = Day14()
@@ -12,6 +13,6 @@ internal class Day14Test {
 
     @Test
     fun `day 14 part 2`() {
-        assertEquals(3724343376942L, day14.partTwo())
+        assertEquals(3724343376942L, day14.part2())
     }
 }
