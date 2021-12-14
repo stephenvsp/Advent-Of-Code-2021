@@ -47,22 +47,15 @@ class Day14 {
 
 
         var charMap = mutableMapOf<Char, Long>()
-        pairMap.forEach {
-            charMap[it.key[0]] = charMap.getOrDefault(it.key[0], 0) + it.value
-            charMap[it.key[1]] = charMap.getOrDefault(it.key[1], 0) + it.value
+        charMap[polymer[polymer.lastIndex]] = 1
+
+        pairMap.forEach { (pair, count) ->
+            charMap[pair[0]] = charMap.getOrDefault(pair[0], 0L) + count
         }
 
-        charMap = charMap.mapValues { it.value / 2 }.toMutableMap()
-        charMap[polymer[0]] = charMap.getOrDefault(polymer[0], 0) + 1
-        charMap[polymer[polymer.lastIndex]] = charMap.getOrDefault(polymer[polymer.lastIndex], 0) + 1
+        val ans = charMap.maxOf { it.value } - charMap.minOf { it.value }
 
-        val max = charMap.values.maxByOrNull { it }!!
-        val min = charMap.values.minByOrNull { it }!!
-
-        val ans = max - min
-
-        println("Day 14 Part 2: ans")
-
+        println("Day 14 Part 2: $ans")
         return ans
     }
 
