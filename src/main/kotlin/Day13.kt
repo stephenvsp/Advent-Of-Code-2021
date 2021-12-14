@@ -11,7 +11,7 @@ class Day13 {
         .toSet()
     private var folds = lines
         .takeLastWhile { it.isNotEmpty() }
-        .map { it.substringAfter( " ")}
+        .map { it.substringAfterLast( " ")}
         .map { it.substringBefore("=") to it.substringAfter("=").toInt()}
 
 
@@ -25,7 +25,7 @@ class Day13 {
     }
 
     fun partTwo() : String {
-        val points = foldPaper(folds)
+        val foldedPaper = foldPaper(folds)
 
         val ans = "ZKAUCFUC"
 
