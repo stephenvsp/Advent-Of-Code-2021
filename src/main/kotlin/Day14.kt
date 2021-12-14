@@ -23,4 +23,45 @@ class Day14 {
         println("Day 14 Part 1: $ans")
         return ans
     }
+
+    fun partTwo(): Long {
+
+        var pairMap = polymer.windowed(2).groupingBy { it }.eachCount().mapValues { it.value.toLong() }.toMutableMap()
+
+        repeat(40) {
+            var newPairMap = pairMap.toMutableMap()
+            pairMap.forEach { (oldString, count) ->
+                val newStrings = """${oldString[0]}${rules[oldString]!!}${oldString[1]}""".windowed(2)
+
+                newStrings.filter { it != oldString }.forEach {
+                    newPairMap[it] = newPairMap.getOrDefault(it, 0) + count
+                }
+
+                if (!newStrings.contains(oldString)) {
+                    newPairMap[oldString] = newPairMap[oldString]!! - count
+                }
+            }
+            pairMap = newPairMap.filter { it.value != 0L }.toMutableMap()
+        }
+
+
+        var charMap = mutableMapOf<Char, Long>()
+        pairMap.forEach {
+            charMap[it.key[0]] = charMap.getOrDefault(it.key[0], 0) + it.value
+            charMap[it.key[1]] = charMap.getOrDefault(it.key[1], 0) + it.value
+        }
+
+        charMap = charMap.mapValues { it.value / 2 }.toMutableMap()
+        charMap[polymer[0]] = charMap.getOrDefault(polymer[0], 0) + 1
+        charMap[polymer[polymer.lastIndex]] = charMap.getOrDefault(polymer[polymer.lastIndex], 0) + 1
+
+        val max = charMap.values.maxByOrNull { it }!!
+        val min = charMap.values.minByOrNull { it }!!
+
+        val ans = max - min
+
+        println("Day 14 Part 2: ans")
+
+        return ans
+    }
 }
