@@ -29,31 +29,27 @@ class Day14 {
 
         var pairMap = polymer.windowed(2).groupingBy { it }.eachCount().mapValues { it.value.toLong() }
 
-        repeat(40) {
-            var newPairMap = pairMap.toMutableMap()
-            pairMap.forEach { (oldString, count) ->
-                val newStrings = """${oldString[0]}${rules[oldString]!!}${oldString[1]}""".windowed(2)
 
-                newStrings.filter { it != oldString }.forEach {
-                    newPairMap[it] = newPairMap.getOrDefault(it, 0) + count
-                }
+        val pairsCount = (0 until 40).fold(pairMap) { current, _ ->
+            var newPairMap = mutableMapOf<String, Long>()
+            current.forEach { (oldString, count) ->
+                val one = oldString[0] + rules[oldString]!!
+                val two = rules[oldString]!! + oldString[1]
 
-                if (!newStrings.contains(oldString)) {
-                    newPairMap[oldString] = newPairMap.getOrDefault(oldString, 0) - count
-                }
+                newPairMap[one] = newPairMap.getOrDefault(one, 0) + count
+                newPairMap[two] = newPairMap.getOrDefault(two, 0) + count
             }
-            pairMap = newPairMap.filter { it.value != 0L }
+            newPairMap
         }
 
-
-        var charMap = mutableMapOf<Char, Long>()
-        charMap[polymer[polymer.lastIndex]] = 1
-
-        pairMap.forEach { (pair, count) ->
-            charMap[pair[0]] = charMap.getOrDefault(pair[0], 0L) + count
+        val charCount = buildMap<Char, Long> {
+            put(polymer[0], 1)
+            pairsCount.forEach { (pair, count) ->
+                put(pair[1], getOrDefault(pair[1], 0) + count)
+            }
         }
 
-        val ans = charMap.maxOf { it.value } - charMap.minOf { it.value }
+        val ans = charCount.maxOf { it.value } - charCount.minOf { it.value }
 
         println("Day 14 Part 2: $ans")
         return ans
