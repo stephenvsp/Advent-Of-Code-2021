@@ -1,6 +1,6 @@
 import java.io.File
 
-class Day16 : Day {
+class Day16 {
 
     val input = File("src/main/resources/input16.txt").readLines().first()
 
@@ -18,15 +18,25 @@ class Day16 : Day {
         val tag = binary.substring(pointer, pointer + 3).toInt(2)
         pointer += 3
 
-        if (tag == 4) {
-            //literal
-            return readLiteral()
+        return when (tag) {
+            0 -> readOperator().sum()
+            1 -> readOperator().reduce { a, b -> a * b}
+            2 -> readOperator().minOrNull()!!
+            3 -> readOperator().maxOrNull()!!
+            4 -> readLiteral()
+            5 -> {
+                val nums = readOperator()
+                if (nums[0] > nums[1]) 1 else 0
+            }
+            6 -> {
+                val nums = readOperator()
+                if (nums[0] < nums[1]) 1 else 0
+            }
+            else -> {
+                val nums = readOperator()
+                if (nums[0] == nums[1]) 1 else 0
+            }
         }
-        else {
-            //operator
-            val nums = readOperator()
-        }
-        return 0L
     }
 
     private fun readLiteral(): Long {
@@ -43,7 +53,8 @@ class Day16 : Day {
         return numString.toLong(2)
     }
 
-    private fun readOperator() {
+    private fun readOperator(): List<Long> {
+        var subPacketSums = mutableListOf<Long>()
         val lengthTypeId = binary.substring(pointer, pointer + 1).toInt(2)
         pointer += 1
         if (lengthTypeId == 0) {
@@ -51,9 +62,8 @@ class Day16 : Day {
             pointer += 15
 
             var subPacketEnd = pointer + length
-
             while (pointer < subPacketEnd) {
-                readPacket()
+                subPacketSums.add(readPacket())
             }
 
         }
@@ -62,26 +72,33 @@ class Day16 : Day {
             pointer += 11
 
             repeat(numSubPackets) {
-                readPacket()
+                subPacketSums.add(readPacket())
             }
 
         }
+        return subPacketSums
     }
 
-    override fun partOne(): Int {
+    fun partOne(): Int {
 
         while (pointer < binary.length) {
             readPacket()
             pointer += 8 - pointer % 8
         }
+
+        println("Day 16 Part 1: $versionCount")
+
         return versionCount
     }
 
 
 
-    override fun partTwo(): Int {
-            val ans = readPacket()
-            return 0
+    fun partTwo(): Long {
+        val ans = readPacket()
+
+        println("Day 16 Part 1: $ans")
+
+        return ans
     }
 
 }
