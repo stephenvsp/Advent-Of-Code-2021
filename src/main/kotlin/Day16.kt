@@ -4,12 +4,13 @@ class Day16 {
 
     val input = File("src/main/resources/input16.txt").readLines().first()
 
-    var binary = input.chunked(2).joinToString("") { Integer.toBinaryString(it.toInt(16)).padStart(8, '0') }
+    var binary = input.map { it.digitToInt(16).toString(2).padStart(4, '0') }.joinToString("")
 
     var pointer = 0
 
     var versionCount = 0
 
+    private fun Boolean.toLong() = if (this) 1L else 0L
 
     private fun readPacket(): Long {
         val version = binary.substring(pointer, pointer + 3).toInt(2)
@@ -20,21 +21,24 @@ class Day16 {
 
         return when (tag) {
             0 -> readOperator().sum()
-            1 -> readOperator().reduce { a, b -> a * b}
+            1 -> readOperator().reduce { a, b -> a * b }
             2 -> readOperator().minOrNull()!!
             3 -> readOperator().maxOrNull()!!
             4 -> readLiteral()
             5 -> {
-                val nums = readOperator()
-                if (nums[0] > nums[1]) 1 else 0
+                val values = readOperator()
+                (values[0] > values[1]).toLong()
             }
             6 -> {
-                val nums = readOperator()
-                if (nums[0] < nums[1]) 1 else 0
+                val values = readOperator()
+                (values[0] < values[1]).toLong()
+            }
+            7 -> {
+                val values = readOperator()
+                (values[0] == values[1]).toLong()
             }
             else -> {
-                val nums = readOperator()
-                if (nums[0] == nums[1]) 1 else 0
+                error("WTF")
             }
         }
     }
