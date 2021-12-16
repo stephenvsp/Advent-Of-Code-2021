@@ -31,13 +31,13 @@ class Day14 {
 
 
         val pairsCount = (0 until 40).fold(pairMap) { current, _ ->
-            var newPairMap = mutableMapOf<String, Long>()
+            var newPairMap = mutableMapOf<String, Long>().withDefault { 0 }
             current.forEach { (oldString, count) ->
-                val one = oldString[0] + rules[oldString]!!
-                val two = rules[oldString]!! + oldString[1]
+                val one = oldString[0] + rules.getValue(oldString)
+                val two = rules.getValue(oldString) + oldString[1]
 
-                newPairMap[one] = newPairMap.getOrDefault(one, 0) + count
-                newPairMap[two] = newPairMap.getOrDefault(two, 0) + count
+                newPairMap[one] = newPairMap.getValue(one) + count
+                newPairMap[two] = newPairMap.getValue(two) + count
             }
             newPairMap
         }
