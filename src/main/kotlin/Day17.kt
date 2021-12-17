@@ -13,33 +13,7 @@ class Day17 : Day {
     }
 
     override fun partOne(): Int {
-        val madeBasketHighestYValues = mutableListOf<Int>()
-
-        for (x in 1..1000) {
-            for (y in 0..1000) {
-                var xVelocity = x
-                var yVelocity = y
-                var xPos = 0
-                var yPos = 0
-                val yPositions = mutableListOf<Int>()
-
-                while (!targetArea.contains(xPos to yPos) && !missedBasket(xPos, yPos)) {
-                    yPositions.add(yPos)
-
-                    xPos += xVelocity
-                    yPos += yVelocity
-
-                    xVelocity = applyDrag(xVelocity)
-                    yVelocity--
-                }
-
-                if (targetArea.contains(xPos to yPos)) {
-                    madeBasketHighestYValues.add(yPositions.maxOf { it })
-                }
-            }
-        }
-
-        val ans = madeBasketHighestYValues.maxOf{ it }
+        val ans = (-targetArea.y1 - 1).sequenceSum()
 
         println("Day 17 Part 1: $ans")
 
@@ -86,5 +60,9 @@ class Day17 : Day {
     private fun missedY(y: Int): Boolean = y < targetArea.y1
 
     private fun applyDrag(x: Int): Int = if (x > 1) x - 1 else 0
+
+    private fun Int.sequenceSum(): Int {
+        return (1 + this) * this / 2
+    }
 
 }
