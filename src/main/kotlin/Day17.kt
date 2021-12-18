@@ -1,4 +1,5 @@
 import java.io.File
+import java.lang.Integer.max
 
 class Day17 : Day {
 
@@ -64,5 +65,6 @@ class Day17 : Day {
     private fun Int.sequenceSum(): Int {
         return (1 + this) * this / 2
     }
+    
 
 }
